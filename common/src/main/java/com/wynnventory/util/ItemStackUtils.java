@@ -2,6 +2,7 @@ package com.wynnventory.util;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -25,19 +26,19 @@ import com.wynnventory.core.WynnventoryMod;
 import com.wynnventory.model.item.simple.SimpleGearItem;
 import com.wynnventory.model.item.simple.SimpleItem;
 import com.wynnventory.model.item.simple.SimpleTierItem;
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemStackUtils {
-    private static final Pattern PRICE_STR = Pattern.compile("§6󏿼󏿿󏿾 Price");
-    private static final Pattern PRICE_PATTERN = Pattern.compile(
-            "§6󏿼󐀆 (?:§f(?<amount>[\\d,]+) §7x )?§(?:(§f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)");
+    private static final Pattern PRICE_PATTERN =
+            Pattern.compile("§f(?:\uDB00\uDC00)?(?:(?<amount>\\d+(?:,\\d+)*)\\s§7x\\s§f)?(?<price>\\d+(?:,\\d+)*)§7");
 
     private ItemStackUtils() {}
 
@@ -66,27 +67,32 @@ public class ItemStackUtils {
     }
 
     public static StyledText getWynntilsOriginalName(ItemStack stack) {
-        try {
-            Field originalNameField = ItemStack.class.getDeclaredField("wynntilsOriginalName");
-            originalNameField.setAccessible(true);
-            return (StyledText) originalNameField.get(stack);
-        } catch (ReflectiveOperationException e) {
-            WynnventoryMod.logError("Error retrieving original name", e);
-            return null;
-        }
+        return ((ItemStackExtension) stack).getOriginalName();
     }
 
     public static String getWynntilsOriginalNameAsString(WynnItem item) {
-        return Objects.requireNonNull(
-                        ItemStackUtils.getWynntilsOriginalName(item.getData().get(WynnItemData.ITEMSTACK_KEY)))
-                .getLastPart()
-                .getComponent()
-                .getString();
+        ItemStack stack = item.getData().get(WynnItemData.ITEMSTACK_KEY);
+        String originalName = getWynntilsOriginalName(stack).getNormalized().getStringWithoutFormatting();
+        return StringUtils.removeNonAsciiChars(originalName);
     }
 
     public static WynnItem getWynnItem(ItemStack stack) {
         Optional<WynnItem> optionalWynnItem = Models.Item.getWynnItem(stack);
         return optionalWynnItem.orElse(null);
+    }
+
+    public static Component getCleanItemNameComponent(ItemStack stack) {
+        StyledText styledText = getWynntilsOriginalName(stack).getNormalized();
+        String cleanName = StringUtils.removeNonAsciiChars(styledText.getStringWithoutFormatting());
+
+        Style style = stack.getHoverName().getSiblings().stream()
+                .filter(c -> FontDescription.DEFAULT.equals(c.getStyle().getFont()))
+                .filter(c -> !StringUtils.removeNonAsciiChars(c.getString()).isBlank())
+                .map(Component::getStyle)
+                .findFirst()
+                .orElse(stack.getHoverName().getStyle());
+
+        return Component.literal(cleanName).withStyle(style);
     }
 
     public static String getMaterialName(MaterialItem item) {
@@ -101,27 +107,20 @@ public class ItemStackUtils {
 
     public static TradeMarketPriceInfo calculateItemPriceInfo(ItemStack stack) {
         List<StyledText> loreLines = LoreUtils.getLore(stack);
-        if (loreLines.size() < 2) return TradeMarketPriceInfo.EMPTY;
-        StyledText priceLine = loreLines.get(1);
-        if (priceLine != null && priceLine.matches(PRICE_STR)) {
-            StyledText priceValueLine = loreLines.get(2);
-            Matcher matcher = priceValueLine.getMatcher(PRICE_PATTERN);
-            if (!matcher.matches()) {
-                WynnventoryMod.logWarn("Trade Market item had an unexpected price value line: " + priceValueLine);
-                return TradeMarketPriceInfo.EMPTY;
-            } else {
+
+        for (StyledText styledTextParts : loreLines) {
+            Matcher matcher = styledTextParts.getMatcher(PRICE_PATTERN);
+            if (matcher.find()) {
                 int price = Integer.parseInt(matcher.group("price").replace(",", ""));
-                String silverbullPriceStr = matcher.group("silverbullPrice");
-                int silverbullPrice =
-                        silverbullPriceStr == null ? price : Integer.parseInt(silverbullPriceStr.replace(",", ""));
                 String amountStr = matcher.group("amount");
                 int amount = amountStr == null ? 1 : Integer.parseInt(amountStr.replace(",", ""));
-                return new TradeMarketPriceInfo(price, silverbullPrice, amount);
+                return new TradeMarketPriceInfo(price, price, amount);
             }
-        } else {
-            WynnventoryMod.logWarn("Trade Market item had an unexpected price line: " + priceLine);
-            return TradeMarketPriceInfo.EMPTY;
         }
+
+        WynnventoryMod.logWarn("Could not find price line for trademarket item: "
+                + stack.getHoverName().getString());
+        return TradeMarketPriceInfo.EMPTY;
     }
 
     public static String getAmplifierName(AmplifierItem item) {
