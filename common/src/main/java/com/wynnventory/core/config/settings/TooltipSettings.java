@@ -8,18 +8,18 @@ public class TooltipSettings {
 
     private DisplayOptions displayFormat = DisplayOptions.FORMATTED;
 
-    private boolean showMaxPrice = true;
-    private boolean showUnidentifiedMaxPrice = true;
+    private boolean showMaxPrice = false;
+    private boolean showUnidentifiedMaxPrice = false;
     private boolean showMinPrice = true;
     private boolean showUnidentifiedMinPrice = true;
     private boolean showAveragePrice = false;
     private boolean showAverage80Price = true;
     private boolean showUnidAveragePrice = false;
     private boolean showUnidAverage80Price = true;
-    private boolean showP50 = true;
-    private boolean showP50EMA = true;
-    private boolean showUnidP50 = true;
-    private boolean showUnidP50EMA = true;
+    private boolean showP50 = false;
+    private boolean showP50EMA = false;
+    private boolean showUnidP50 = false;
+    private boolean showUnidP50EMA = false;
 
     public boolean isShowTooltips() {
         return showTooltips;
