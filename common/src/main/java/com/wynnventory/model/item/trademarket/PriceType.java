@@ -36,7 +36,23 @@ public enum PriceType {
     UNID_LOWEST(
             "feature.wynnventory.tooltip.unidLowest",
             TooltipSettings::isShowUnidentifiedMinPrice,
-            s -> s.getUnidentifiedLowestPrice() == null ? null : (double) s.getUnidentifiedLowestPrice());
+            s -> s.getUnidentifiedLowestPrice() == null ? null : (double) s.getUnidentifiedLowestPrice()),
+    P50(
+            "feature.wynnventory.tooltip.p50",
+            TooltipSettings::isShowP50,
+            s -> s.getP50() == null ? null : (double) s.getP50()),
+    P50_EMA(
+            "feature.wynnventory.tooltip.p50EMA",
+            TooltipSettings::isShowP50EMA,
+            s -> s.getP50EMA() == null ? null : (double) s.getP50EMA()),
+    UNID_P50(
+            "feature.wynnventory.tooltip.unidP50",
+            TooltipSettings::isShowUnidP50,
+            s -> s.getUnidentifiedP50() == null ? null : (double) s.getUnidentifiedP50()),
+    UNID_P50_EMA(
+            "feature.wynnventory.tooltip.unidP50EMA",
+            TooltipSettings::isShowUnidP50EMA,
+            s -> s.getUnidentifiedP50EMA() == null ? null : (double) s.getUnidentifiedP50EMA());
 
     private final String label;
     private final Predicate<TooltipSettings> enabledCheck;

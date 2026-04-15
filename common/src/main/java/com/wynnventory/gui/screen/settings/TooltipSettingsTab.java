@@ -62,6 +62,16 @@ public class TooltipSettingsTab implements SettingsTab {
                 OptionInstance.createBoolean(
                         "gui.wynnventory.settings.tooltip.showUnidAverage80Price",
                         s.isShowUnidAverage80Price(),
-                        s::setShowUnidAverage80Price));
+                        s::setShowUnidAverage80Price),
+                OptionInstance.createBoolean(
+                        "gui.wynnventory.settings.tooltip.showP50Price", s.isShowP50(), s::setShowP50),
+                OptionInstance.createBoolean(
+                        "gui.wynnventory.settings.tooltip.showP50EMAPrice", s.isShowP50EMA(), s::setShowP50EMA),
+                OptionInstance.createBoolean(
+                        "gui.wynnventory.settings.tooltip.showUnidP50Price", s.isShowUnidP50(), s::setShowUnidP50),
+                OptionInstance.createBoolean(
+                        "gui.wynnventory.settings.tooltip.showUnidP50EMAPrice",
+                        s.isShowUnidP50EMA(),
+                        s::setShowUnidP50EMA));
     }
 }

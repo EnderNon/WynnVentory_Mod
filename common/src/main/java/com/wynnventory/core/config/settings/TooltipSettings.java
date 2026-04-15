@@ -16,6 +16,10 @@ public class TooltipSettings {
     private boolean showAverage80Price = true;
     private boolean showUnidAveragePrice = false;
     private boolean showUnidAverage80Price = true;
+    private boolean showP50 = true;
+    private boolean showP50EMA = true;
+    private boolean showUnidP50 = true;
+    private boolean showUnidP50EMA = true;
 
     public boolean isShowTooltips() {
         return showTooltips;
@@ -119,5 +123,37 @@ public class TooltipSettings {
 
     public void setShowUnidAverage80Price(boolean showUnidAverage80Price) {
         this.showUnidAverage80Price = showUnidAverage80Price;
+    }
+
+    public boolean isShowP50() {
+        return showP50;
+    }
+
+    public void setShowP50(boolean showP50) {
+        this.showP50 = showP50;
+    }
+
+    public boolean isShowP50EMA() {
+        return showP50EMA;
+    }
+
+    public void setShowP50EMA(boolean showP50EMA) {
+        this.showP50EMA = showP50EMA;
+    }
+
+    public boolean isShowUnidP50() {
+        return showUnidP50;
+    }
+
+    public void setShowUnidP50(boolean showUnidP50) {
+        this.showUnidP50 = showUnidP50;
+    }
+
+    public boolean isShowUnidP50EMA() {
+        return showUnidP50EMA;
+    }
+
+    public void setShowUnidP50EMA(boolean showUnidP50EMA) {
+        this.showUnidP50EMA = showUnidP50EMA;
     }
 }
