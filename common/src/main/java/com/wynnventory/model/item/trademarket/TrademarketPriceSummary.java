@@ -13,10 +13,10 @@ public class TrademarketPriceSummary {
     private Integer unidentifiedLowestPrice;
     private Double unidentifiedAverageMid80PercentPrice;
     private Double unidentifiedAveragePrice;
-    private double p50;
-    private double p50EMA;
-    private double unidentifiedP50;
-    private double unidentifiedP50EMA;
+    private Double p50;
+    private Double p50EMA;
+    private Double unidentifiedP50;
+    private Double unidentifiedP50EMA;
 
     public Double getAverageMid80PercentPrice() {
         return averageMid80PercentPrice;
@@ -82,35 +82,35 @@ public class TrademarketPriceSummary {
         this.unidentifiedLowestPrice = unidentifiedLowestPrice;
     }
 
-    public double getP50() {
+    public Double getP50() {
         return p50;
     }
 
-    public void setP50(double p50) {
+    public void setP50(Double p50) {
         this.p50 = p50;
     }
 
-    public double getP50EMA() {
+    public Double getP50EMA() {
         return p50EMA;
     }
 
-    public void setP50EMA(double p50EMA) {
+    public void setP50EMA(Double p50EMA) {
         this.p50EMA = p50EMA;
     }
 
-    public double getUnidentifiedP50() {
+    public Double getUnidentifiedP50() {
         return unidentifiedP50;
     }
 
-    public void setUnidentifiedP50(double unidentifiedP50) {
+    public void setUnidentifiedP50(Double unidentifiedP50) {
         this.unidentifiedP50 = unidentifiedP50;
     }
 
-    public double getUnidentifiedP50EMA() {
+    public Double getUnidentifiedP50EMA() {
         return unidentifiedP50EMA;
     }
 
-    public void setUnidentifiedP50EMA(double unidentifiedP50EMA) {
+    public void setUnidentifiedP50EMA(Double unidentifiedP50EMA) {
         this.unidentifiedP50EMA = unidentifiedP50EMA;
     }
 
