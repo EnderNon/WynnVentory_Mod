@@ -12,6 +12,7 @@ import com.wynnventory.api.service.IconService;
 import com.wynnventory.model.item.Icon;
 import com.wynnventory.model.item.ItemStat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -118,6 +119,12 @@ public class SimpleGearItem extends SimpleItem {
         return shinyStat.isPresent();
     }
 
+    private List<ItemStat> getSortedStats() {
+        return actualStatsWithPercentage.stream()
+                .sorted(Comparator.comparing(s -> s.statActualValue().statType().getKey()))
+                .toList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -126,8 +133,9 @@ public class SimpleGearItem extends SimpleItem {
         if (o instanceof SimpleGearItem other) {
             return unidentified == other.unidentified
                     && rerollCount == other.rerollCount
-                    && overallRollPercentage == other.overallRollPercentage
-                    && Objects.equals(actualStatsWithPercentage, other.actualStatsWithPercentage)
+                    //                    && overallRollPercentage == other.overallRollPercentage
+                    //                    && Objects.equals(actualStatsWithPercentage, other.actualStatsWithPercentage)
+                    && Objects.equals(getSortedStats(), other.getSortedStats())
                     && Objects.equals(
                             shinyStat.map(s -> s.statType().key() + ":" + s.value()),
                             other.shinyStat.map(s -> s.statType().key() + ":" + s.value()));
@@ -143,8 +151,7 @@ public class SimpleGearItem extends SimpleItem {
                 unidentified,
                 rerollCount,
                 shinyStat.map(s -> s.statType().key() + ":" + s.value()).orElse(null),
-                overallRollPercentage,
-                actualStatsWithPercentage);
+                getSortedStats());
     }
 
     public static SimpleGearItem from(GearItem item) {

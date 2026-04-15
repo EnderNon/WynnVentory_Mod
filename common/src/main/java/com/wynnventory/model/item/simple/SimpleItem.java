@@ -144,7 +144,9 @@ public class SimpleItem extends TimestampedObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, rarity, itemType, type, amount);
+        String rarityStr = rarity != null ? rarity.getName() : null;
+        String itemTypeStr = itemType != null ? itemType.getType() : null;
+        return Objects.hash(name, rarityStr, itemTypeStr, type, amount);
     }
 
     @Override
