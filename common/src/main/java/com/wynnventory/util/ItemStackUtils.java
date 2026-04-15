@@ -38,7 +38,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemStackUtils {
     private static final Pattern PRICE_PATTERN =
-            Pattern.compile("§f(?:\uDB00\uDC00)?(?:(?<amount>\\d+(?:,\\d+)*)\\s§7x\\s§f)?(?<price>\\d+(?:,\\d+)*)§7");
+            Pattern.compile("§f(?:󐀀)?(?:(?<amount>\\d+(?:,\\d+)*)\\s§7x(?:§f)?\\s*)?(?<price>\\d+(?:,\\d+)*)§7");
 
     private ItemStackUtils() {}
 
