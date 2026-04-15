@@ -80,6 +80,7 @@ public class RewardScreen extends Screen {
     private static final int MARGIN_X = 55;
     private static final int BOTTOM_PADDING = 20;
     private static final int ROW_SPACING_Y = 15;
+    private static final int POOL_SPACING_X = 8;
 
     // Tab buttons (Lootrun / Raid)
     private static final int TAB_BUTTON_WIDTH = 100;
@@ -490,10 +491,11 @@ public class RewardScreen extends Screen {
                 Math.min(ModConfig.getInstance().getRewardScreenSettings().getMaxPoolsPerPage(), 2 * currentColumns);
         int displayCount = Math.min(maxPerPage, allActivePools.size());
         int rows = (displayCount <= currentColumns) ? 1 : 2;
-        int sectionWidth = contentWidth / currentColumns;
+        int totalSpacing = POOL_SPACING_X * (currentColumns - 1);
+        int sectionWidth = (contentWidth - totalSpacing) / currentColumns;
 
         int firstRowPools = Math.min(displayCount, currentColumns);
-        int firstRowWidth = firstRowPools * sectionWidth;
+        int firstRowWidth = firstRowPools * sectionWidth + (firstRowPools - 1) * POOL_SPACING_X;
         int rowCenteringOffset = (contentWidth - firstRowWidth) / 2;
 
         for (int i = 0; i < displayCount; i++) {
@@ -503,7 +505,7 @@ public class RewardScreen extends Screen {
             int poolIndex = (scrollIndex + i) % allActivePools.size();
             RewardPool pool = allActivePools.get(poolIndex);
 
-            int currentX = MARGIN_X + rowCenteringOffset + (col * sectionWidth);
+            int currentX = MARGIN_X + rowCenteringOffset + (col * (sectionWidth + POOL_SPACING_X));
 
             double poolScale = this.globalPoolScale;
             int headerH = (int) (Sprite.LOOTRUN_POOL_TOP_SECTION.height() * poolScale);
@@ -514,7 +516,9 @@ public class RewardScreen extends Screen {
             int minSectionWidth = Math.max(headerW_, bodyW_);
 
             // Determine if the chosen scale fits in 1 or 2 rows
-            int scaleRows = (allActivePools.size() * minSectionWidth * this.globalPoolScale <= contentWidth) ? 1 : 2;
+            int scaleSpacing = POOL_SPACING_X * (displayCount - 1);
+            int scaleRows =
+                    (displayCount * minSectionWidth * this.globalPoolScale + scaleSpacing <= contentWidth) ? 1 : 2;
 
             int spacingTotal = (scaleRows > 1) ? ROW_SPACING_Y : 0;
             int totalAvailableHeight = this.height - MARGIN_Y - BOTTOM_PADDING - spacingTotal;
@@ -656,7 +660,7 @@ public class RewardScreen extends Screen {
                 ChatUtils.error("Failed to save filter settings.");
                 WynnventoryMod.logError("Failed to save filter settings.", e);
             }
-            this.rebuildWidgets();
+            this.triggerRecalc();
         }));
     }
 
@@ -695,7 +699,9 @@ public class RewardScreen extends Screen {
         int bodyW = (int) (INTERIOR_BODY_WIDTH * scale);
         int minSectionWidth = Math.max(headerW, bodyW);
 
-        int cols = Math.max(1, contentWidth / Math.max(1, minSectionWidth));
+        // Account for spacing between columns: N columns need (N-1) gaps
+        // contentWidth >= N * minSectionWidth + (N-1) * POOL_SPACING_X
+        int cols = Math.max(1, (contentWidth + POOL_SPACING_X) / Math.max(1, minSectionWidth + POOL_SPACING_X));
         return cols;
     }
 
@@ -746,8 +752,9 @@ public class RewardScreen extends Screen {
                         if (ex != null) {
                             itemsByPool.put(pool, List.of());
                         } else {
-                            // We use UNFILTERED items for scaling to ensure consistent pool size
+                            // Apply current filters so scaling matches visible content
                             List<SimpleItem> forScaling = items.stream()
+                                    .filter(this::matchesFilters)
                                     .filter(it -> {
                                         GuideItemStack stack = getGuideItemStack(it);
                                         return stack != null && !stack.isEmpty();
@@ -779,33 +786,46 @@ public class RewardScreen extends Screen {
         }
 
         // --- Multi-row scaling optimization ---
-        // We want the largest possible scale that fits ALL pools within at most 2 rows.
-        // We evaluate both 1-row and 2-row layouts and pick the one with the larger
-        // resulting scale.
+        // We want the largest possible scale that fits the displayed pools within at most 2 rows.
+        // We iterate because the number of columns (and thus displayCount) depends on the scale,
+        // and the scale depends on displayCount.
 
         int headerW = Sprite.LOOTRUN_POOL_TOP_SECTION.width();
         int bodyW = INTERIOR_BODY_WIDTH;
         int minSectionWidth = Math.max(headerW, bodyW);
         int contentWidth = getContentWidth();
         int totalAvailableHeight = this.height - MARGIN_Y - BOTTOM_PADDING;
+        int configMaxPerPage = ModConfig.getInstance().getRewardScreenSettings().getMaxPoolsPerPage();
 
-        // Option 1: Try to fit all pools in 1 row
-        double s1Vert = (double) totalAvailableHeight / this.tallestNaturalHeight;
-        double s1Horiz = (double) contentWidth / (pools.size() * minSectionWidth);
-        double scale1 = Math.min(1.0, Math.min(s1Vert, s1Horiz));
+        // Iteratively converge: compute scale, then re-derive displayCount at that scale
+        double computedScale = 1.0;
+        for (int iter = 0; iter < 5; iter++) {
+            int cols = getCurrentColumns(computedScale);
+            int maxPerPage = Math.min(configMaxPerPage, 2 * cols);
+            int displayCount = Math.min(maxPerPage, pools.size());
 
-        // Option 2: Try to fit all pools in 2 rows
-        int poolsPerRow2 = (int) Math.ceil(pools.size() / 2.0);
-        double s2Vert = (double) (totalAvailableHeight - ROW_SPACING_Y) / (2.0 * this.tallestNaturalHeight);
-        double s2Horiz = (double) contentWidth / (poolsPerRow2 * minSectionWidth);
-        double scale2 = Math.min(1.0, Math.min(s2Vert, s2Horiz));
+            // Option 1: Try to fit displayed pools in 1 row
+            int spacing1 = POOL_SPACING_X * Math.max(0, displayCount - 1);
+            double s1Vert = (double) totalAvailableHeight / this.tallestNaturalHeight;
+            double s1Horiz = (double) (contentWidth - spacing1) / (displayCount * minSectionWidth);
+            double scale1 = Math.min(1.0, Math.min(s1Vert, s1Horiz));
 
-        // Choose the layout that yields the larger scale
-        if (scale1 >= scale2) {
-            this.globalPoolScale = scale1;
-        } else {
-            this.globalPoolScale = scale2;
+            // Option 2: Try to fit displayed pools in 2 rows
+            int poolsPerRow2 = (int) Math.ceil(displayCount / 2.0);
+            int spacing2 = POOL_SPACING_X * Math.max(0, poolsPerRow2 - 1);
+            double s2Vert = (double) (totalAvailableHeight - ROW_SPACING_Y) / (2.0 * this.tallestNaturalHeight);
+            double s2Horiz = (double) (contentWidth - spacing2) / (poolsPerRow2 * minSectionWidth);
+            double scale2 = Math.min(1.0, Math.min(s2Vert, s2Horiz));
+
+            double newScale = Math.max(scale1, scale2);
+            if (Math.abs(newScale - computedScale) < 0.001) {
+                computedScale = newScale;
+                break;
+            }
+            computedScale = newScale;
         }
+
+        this.globalPoolScale = computedScale;
 
         this.scaleReady = true;
         this.recalculating = false;
