@@ -68,28 +68,28 @@ public class TooltipSettingsTab implements SettingsTab {
                         s.isShowUnidAverage80Price(),
                         s::setShowUnidAverage80Price),
                 OptionInstance.createBoolean(
-                        "gui.wynnventory.settings.tooltip.showP50Price",
+                        "gui.wynnventory.settings.tooltip.showMedian",
                         OptionInstance.cachedConstantTooltip(
-                                Component.translatable("gui.wynnventory.settings.tooltip.showP50Price.tooltip")),
-                        s.isShowP50(),
-                        s::setShowP50),
+                                Component.translatable("gui.wynnventory.settings.tooltip.showMedian.tooltip")),
+                        s.isShowMedian(),
+                        s::setShowMedian),
                 OptionInstance.createBoolean(
-                        "gui.wynnventory.settings.tooltip.showP50EMAPrice",
+                        "gui.wynnventory.settings.tooltip.showMovingMedian",
                         OptionInstance.cachedConstantTooltip(
-                                Component.translatable("gui.wynnventory.settings.tooltip.showP50EMAPrice.tooltip")),
-                        s.isShowP50EMA(),
-                        s::setShowP50EMA),
+                                Component.translatable("gui.wynnventory.settings.tooltip.showMovingMedian.tooltip")),
+                        s.isShowMovingMedian(),
+                        s::setShowMovingMedian),
                 OptionInstance.createBoolean(
-                        "gui.wynnventory.settings.tooltip.showUnidP50Price",
+                        "gui.wynnventory.settings.tooltip.showUnidMedian",
                         OptionInstance.cachedConstantTooltip(
-                                Component.translatable("gui.wynnventory.settings.tooltip.showUnidP50Price.tooltip")),
-                        s.isShowUnidP50(),
-                        s::setShowUnidP50),
+                                Component.translatable("gui.wynnventory.settings.tooltip.showUnidMedian.tooltip")),
+                        s.isShowUnidMedian(),
+                        s::setShowUnidMedian),
                 OptionInstance.createBoolean(
-                        "gui.wynnventory.settings.tooltip.showUnidP50EMAPrice",
-                        OptionInstance.cachedConstantTooltip(
-                                Component.translatable("gui.wynnventory.settings.tooltip.showUnidP50EMAPrice.tooltip")),
-                        s.isShowUnidP50EMA(),
-                        s::setShowUnidP50EMA));
+                        "gui.wynnventory.settings.tooltip.showUnidMovingMedian",
+                        OptionInstance.cachedConstantTooltip(Component.translatable(
+                                "gui.wynnventory.settings.tooltip.showUnidMovingMedian.tooltip")),
+                        s.isShowUnidMovingMedian(),
+                        s::setShowUnidMovingMedian));
     }
 }

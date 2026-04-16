@@ -180,43 +180,43 @@ public class TrademarketItemSummary extends TimestampedObject {
     }
 
     @JsonProperty("p50_price")
-    public Double getP50() {
-        return calculatedPriceInfo.getP50();
+    public Double getMedian() {
+        return calculatedPriceInfo.getMedian();
     }
 
     @JsonProperty("p50_price")
-    public void setP50(Double value) {
-        calculatedPriceInfo.setP50(value);
+    public void setMedian(Double value) {
+        calculatedPriceInfo.setMedian(value);
     }
 
     @JsonProperty("average_p50_ema_price")
-    public Double getP50EMA() {
-        return calculatedPriceInfo.getP50EMA();
+    public Double getMovingMedian() {
+        return calculatedPriceInfo.getMovingMedian();
     }
 
     @JsonProperty("average_p50_ema_price")
-    public void setP50EMA(Double value) {
-        calculatedPriceInfo.setP50EMA(value);
+    public void setMovingMedian(Double value) {
+        calculatedPriceInfo.setMovingMedian(value);
     }
 
     @JsonProperty("unidentified_p50_price")
-    public Double getUnidentifiedP50() {
-        return calculatedPriceInfo.getUnidentifiedP50();
+    public Double getUnidentifiedMedian() {
+        return calculatedPriceInfo.getUnidentifiedMedian();
     }
 
     @JsonProperty("unidentified_p50_price")
-    public void setUnidentifiedP50(Double value) {
-        calculatedPriceInfo.setUnidentifiedP50(value);
+    public void setUnidentifiedMedian(Double value) {
+        calculatedPriceInfo.setUnidentifiedMedian(value);
     }
 
     @JsonProperty("unidentified_average_p50_ema_price")
-    public Double getUnidentifiedP50EMA() {
-        return calculatedPriceInfo.getUnidentifiedP50EMA();
+    public Double getUnidentifiedMovingMedian() {
+        return calculatedPriceInfo.getUnidentifiedMovingMedian();
     }
 
     @JsonProperty("unidentified_average_p50_ema_price")
-    public void setUnidentifiedP50EMA(Double value) {
-        calculatedPriceInfo.setUnidentifiedP50EMA(value);
+    public void setUnidentifiedMovingMedian(Double value) {
+        calculatedPriceInfo.setUnidentifiedMovingMedian(value);
     }
 
     public boolean isEmpty() {

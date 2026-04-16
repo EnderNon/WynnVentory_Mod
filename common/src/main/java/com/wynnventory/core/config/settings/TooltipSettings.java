@@ -16,10 +16,10 @@ public class TooltipSettings {
     private boolean showAverage80Price = true;
     private boolean showUnidAveragePrice = false;
     private boolean showUnidAverage80Price = true;
-    private boolean showP50 = false;
-    private boolean showP50EMA = false;
-    private boolean showUnidP50 = false;
-    private boolean showUnidP50EMA = false;
+    private boolean showMedian = false;
+    private boolean showMovingMedian = false;
+    private boolean showUnidMedian = false;
+    private boolean showUnidMovingMedian = false;
 
     public boolean isShowTooltips() {
         return showTooltips;
@@ -125,35 +125,35 @@ public class TooltipSettings {
         this.showUnidAverage80Price = showUnidAverage80Price;
     }
 
-    public boolean isShowP50() {
-        return showP50;
+    public boolean isShowMedian() {
+        return showMedian;
     }
 
-    public void setShowP50(boolean showP50) {
-        this.showP50 = showP50;
+    public void setShowMedian(boolean showMedian) {
+        this.showMedian = showMedian;
     }
 
-    public boolean isShowP50EMA() {
-        return showP50EMA;
+    public boolean isShowMovingMedian() {
+        return showMovingMedian;
     }
 
-    public void setShowP50EMA(boolean showP50EMA) {
-        this.showP50EMA = showP50EMA;
+    public void setShowMovingMedian(boolean showMovingMedian) {
+        this.showMovingMedian = showMovingMedian;
     }
 
-    public boolean isShowUnidP50() {
-        return showUnidP50;
+    public boolean isShowUnidMedian() {
+        return showUnidMedian;
     }
 
-    public void setShowUnidP50(boolean showUnidP50) {
-        this.showUnidP50 = showUnidP50;
+    public void setShowUnidMedian(boolean showUnidMedian) {
+        this.showUnidMedian = showUnidMedian;
     }
 
-    public boolean isShowUnidP50EMA() {
-        return showUnidP50EMA;
+    public boolean isShowUnidMovingMedian() {
+        return showUnidMovingMedian;
     }
 
-    public void setShowUnidP50EMA(boolean showUnidP50EMA) {
-        this.showUnidP50EMA = showUnidP50EMA;
+    public void setShowUnidMovingMedian(boolean showUnidMovingMedian) {
+        this.showUnidMovingMedian = showUnidMovingMedian;
     }
 }

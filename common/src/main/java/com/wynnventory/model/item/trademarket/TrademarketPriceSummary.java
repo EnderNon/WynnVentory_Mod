@@ -13,10 +13,10 @@ public class TrademarketPriceSummary {
     private Integer unidentifiedLowestPrice;
     private Double unidentifiedAverageMid80PercentPrice;
     private Double unidentifiedAveragePrice;
-    private Double p50;
-    private Double p50EMA;
-    private Double unidentifiedP50;
-    private Double unidentifiedP50EMA;
+    private Double median;
+    private Double movingMedian;
+    private Double unidentifiedMedian;
+    private Double unidentifiedMovingMedian;
 
     public Double getAverageMid80PercentPrice() {
         return averageMid80PercentPrice;
@@ -82,36 +82,36 @@ public class TrademarketPriceSummary {
         this.unidentifiedLowestPrice = unidentifiedLowestPrice;
     }
 
-    public Double getP50() {
-        return p50;
+    public Double getMedian() {
+        return median;
     }
 
-    public void setP50(Double p50) {
-        this.p50 = p50;
+    public void setMedian(Double median) {
+        this.median = median;
     }
 
-    public Double getP50EMA() {
-        return p50EMA;
+    public Double getMovingMedian() {
+        return movingMedian;
     }
 
-    public void setP50EMA(Double p50EMA) {
-        this.p50EMA = p50EMA;
+    public void setMovingMedian(Double movingMedian) {
+        this.movingMedian = movingMedian;
     }
 
-    public Double getUnidentifiedP50() {
-        return unidentifiedP50;
+    public Double getUnidentifiedMedian() {
+        return unidentifiedMedian;
     }
 
-    public void setUnidentifiedP50(Double unidentifiedP50) {
-        this.unidentifiedP50 = unidentifiedP50;
+    public void setUnidentifiedMedian(Double unidentifiedMedian) {
+        this.unidentifiedMedian = unidentifiedMedian;
     }
 
-    public Double getUnidentifiedP50EMA() {
-        return unidentifiedP50EMA;
+    public Double getUnidentifiedMovingMedian() {
+        return unidentifiedMovingMedian;
     }
 
-    public void setUnidentifiedP50EMA(Double unidentifiedP50EMA) {
-        this.unidentifiedP50EMA = unidentifiedP50EMA;
+    public void setUnidentifiedMovingMedian(Double unidentifiedMovingMedian) {
+        this.unidentifiedMovingMedian = unidentifiedMovingMedian;
     }
 
     @Override

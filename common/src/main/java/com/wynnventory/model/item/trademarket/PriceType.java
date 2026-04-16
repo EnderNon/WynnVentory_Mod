@@ -37,22 +37,22 @@ public enum PriceType {
             "feature.wynnventory.tooltip.unidLowest",
             TooltipSettings::isShowUnidentifiedMinPrice,
             s -> s.getUnidentifiedLowestPrice() == null ? null : (double) s.getUnidentifiedLowestPrice()),
-    P50(
-            "feature.wynnventory.tooltip.p50",
-            TooltipSettings::isShowP50,
-            s -> s.getP50() == null ? null : (double) s.getP50()),
-    P50_EMA(
-            "feature.wynnventory.tooltip.p50EMA",
-            TooltipSettings::isShowP50EMA,
-            s -> s.getP50EMA() == null ? null : (double) s.getP50EMA()),
-    UNID_P50(
-            "feature.wynnventory.tooltip.unidP50",
-            TooltipSettings::isShowUnidP50,
-            s -> s.getUnidentifiedP50() == null ? null : (double) s.getUnidentifiedP50()),
-    UNID_P50_EMA(
-            "feature.wynnventory.tooltip.unidP50EMA",
-            TooltipSettings::isShowUnidP50EMA,
-            s -> s.getUnidentifiedP50EMA() == null ? null : (double) s.getUnidentifiedP50EMA());
+    MEDIAN(
+            "feature.wynnventory.tooltip.median",
+            TooltipSettings::isShowMedian,
+            s -> s.getMedian() == null ? null : (double) s.getMedian()),
+    MOVING_MEDIAN(
+            "feature.wynnventory.tooltip.movingMedian",
+            TooltipSettings::isShowMovingMedian,
+            s -> s.getMovingMedian() == null ? null : (double) s.getMovingMedian()),
+    UNID_MEDIAN(
+            "feature.wynnventory.tooltip.unidMedian",
+            TooltipSettings::isShowUnidMedian,
+            s -> s.getUnidentifiedMedian() == null ? null : (double) s.getUnidentifiedMedian()),
+    UNID_MOVING_MEDIAN(
+            "feature.wynnventory.tooltip.unidMovingMedian",
+            TooltipSettings::isShowUnidMovingMedian,
+            s -> s.getUnidentifiedMovingMedian() == null ? null : (double) s.getUnidentifiedMovingMedian());
 
     private final String label;
     private final Predicate<TooltipSettings> enabledCheck;
