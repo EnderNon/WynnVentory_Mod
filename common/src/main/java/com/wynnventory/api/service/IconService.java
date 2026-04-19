@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.wynnventory.core.WynnventoryMod;
 import com.wynnventory.model.item.Icon;
+import com.wynnventory.model.item.simple.SimpleItemType;
 import com.wynnventory.util.StringUtils;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -49,11 +50,17 @@ public enum IconService {
         allEntries.putAll(tomesMap);
     }
 
-    public Icon getIcon(String name, int tier) {
-        return getIcon(name + " " + tier);
+    public Icon resolveIcon(String lookupName, SimpleItemType itemType) {
+        return resolveIcon(lookupName, itemType, defaultIconKey(lookupName));
     }
 
-    public Icon getIcon(String name) {
+    public Icon resolveIcon(String lookupName, SimpleItemType itemType, String iconKey) {
+        Icon icon = lookupFromJson(lookupName);
+        if (icon != null) return icon;
+        return new Icon("attribute", itemType.getIconPrefix() + "." + iconKey);
+    }
+
+    private Icon lookupFromJson(String name) {
         JsonObject entry = allEntries.get(name.replaceFirst("^Shiny ", ""));
         if (entry == null) {
             WynnventoryMod.logDebug("No JSON entry for key: " + name);
@@ -61,6 +68,11 @@ public enum IconService {
         }
 
         return extractIcon(entry);
+    }
+
+    private static String defaultIconKey(String name) {
+        String raw = StringUtils.toCamelCase(name).replaceAll("[^a-zA-Z0-9]", "");
+        return raw.isEmpty() ? raw : Character.toLowerCase(raw.charAt(0)) + raw.substring(1);
     }
 
     private Map<String, JsonObject> fetchJson(String url) {
